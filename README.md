@@ -1,4 +1,17 @@
-﻿## AIDemos is an Electron.NET ASP.NET 9 CORE 9 Web App (Model-View-Controller)
+﻿## ElectronNET_AI_Demos is an AI Electron.NET ASP.NET 9 CORE 9 Web App (Model-View-Controller)
+
+## Show You How to Use ML.NET, AI and Neural Networks in Electron.NET 
+
+Using Node.js in a C# .NET 9 Core Razor MVC web app with Electron.NET 
+is like putting a square peg in a round hole—unnecessary,
+bloated, and
+fundamentally at odds with the streamlined, high-performance architecture 
+of modern .NET. Electron.NET was built to give .NET developers native access 
+to desktop-level power without dragging in Node.js and its fragile web of 
+dependencies, security holes, and endless package churn. By avoiding Node, 
+you keep your app faster, leaner, and entirely in the C# ecosystem you 
+control—no npm hacks, no version hell, no nonsense. Just clean, efficient 
+.NET code from top to bottom.
 
 ## EXPLANATION OF CORE NAMING
 
