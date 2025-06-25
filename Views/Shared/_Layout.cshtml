@@ -1,0 +1,778 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@using System.Text.Json
+@using Microsoft.JSInterop
+@* @using Newtonsoft.Json *@
+@*@inject IJSRuntime JSRuntime*@
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using System
+
+@{
+    var scriptNonce = Html.ScriptNonce();
+    //var styleNonce = Html.StyleNonce();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="color-scheme" content="dark light">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    @{
+        var keywordsDictionary = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
+        {
+            // Home and Navigation
+            { "/Home/Index", new List<string> { "Home", "Dashboard", "Main Page", "Welcome", "Overview", "Insights" } },
+            { "/Home/Privacy", new List<string> { "Privacy", "Policy", "User Data", "Security", "Terms of Use", "Confidentiality" } },
+            
+            // Developers and Technical Resources
+            { "/Developers/Index", new List<string> { "Developers", "ML.NET", "AI Tools", "Machine Learning", "Code Examples", "Tech Resources" } },
+            { "/Developers/Index2", new List<string> { "Advanced Features", "Neural Networks", "Python Alternatives", "Data Analysis", "Custom APIs" } },
+            { "/Developers/Index3", new List<string> { "Programming", "Tech Innovations", "Backend Development", "Frameworks", "Data Pipelines" } },
+            
+            // Tools and Utilities
+            { "/Tools", new List<string> { "Tools", "Utilities", "Software", "Productivity", "AI Enhancements", "Optimization" } },
+            { "/Tools/Index", new List<string> { "Tools", "Utilities", "Software", "Productivity", "AI Enhancements", "Optimization" } },
+            
+            // Articles and Resources
+            { "/Articles/Index", new List<string> { "Articles", "Profit Strategies", "Case Studies", "Market Trends", "Best Practices" } },
+            { "/Articles/Index2", new List<string> { "Success Stories", "Media Insights", "Advertising ROI", "Customer Stories", "Key Learnings" } },
+            
+            // Videos and Entertainment
+            { "/Videos", new List<string> { "Videos", "Infomercials", "Entertainment", "Promos", "Tutorials", "Behind the Scenes" } },
+            { "https://www.youtube.com", new List<string> { "YouTube Videos", "Streaming", "Media Content", "Visual Learning", "AI Demos" } },
+            { "https://www.youtube.com/watch?v=5CYS0Ti9YC0", new List<string> { "Bill SerGio", "Infomercials", "Celebrities", "AI Videos", "AI Demos" } },
+
+            // AI Media Buys
+            { "/AIProfits", new List<string> { "AI", "Profits", "Media Buys", "Advertising", "Campaign Optimization", "Machine Learning Models" } },
+            { "javascript:openPdf();", new List<string> { "PDF Reports", "Downloadable Resources", "Analysis Documents" } },
+            { "javascript:openPdf2();", new List<string> { "Data Insights", "Market Research", "Strategy Papers" } },
+            
+            // Contact and Support
+            { "/Contact/Index", new List<string> { "Contact", "Support", "Help", "Get in Touch", "Customer Service", "FAQs" } }
+        };
+
+        // Get the current path
+        string currentPath = ViewContext.HttpContext.Request.Path.ToString().TrimEnd('/');
+
+        // Append '/Index' if the path is a controller root
+        if (!currentPath.Contains("/"))
+        {
+            currentPath += "/Index";
+        }
+
+        // Default keywords if path not found
+        List<string> defaultKeywords = new List<string> { "Default", "Keywords", "Website" };
+
+        // Match the path to the dictionary
+        List<string> metaKeywordsList = keywordsDictionary.TryGetValue(currentPath, out var keywords)
+        ? keywords
+        : defaultKeywords;
+
+        // Convert the keywords to a comma-separated string
+        string metaKeywords = string.Join(", ", metaKeywordsList);
+    }
+
+    <meta name="keywords" content="@metaKeywords" />
+    <title>Electron.NET AI Demos</title>
+    <meta name="env" content="Production" />
+
+    <!-- Favicons -->
+    <link href="~/img/favicon.ico" rel="icon">
+    <link href="~/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="~/lib/datatables/dataTables.bootstrap5.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datatables/autoFill.bootstrap5.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datatables/buttons.bootstrap5.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datatables/colReorder.bootstrap5.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datatables/dataTables.dateTime.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datatables/fixedHeader.bootstrap5.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datatables/keyTable.bootstrap5.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datatables/responsive.bootstrap5.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datatables/rowGroup.bootstrap5.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datatables/rowReorder.bootstrap5.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datatables/scroller.bootstrap5.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datatables/searchBuilder.bootstrap5.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datatables/searchPanes.bootstrap5.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datatables/select.bootstrap5.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datatables/stateRestore.bootstrap5.min.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="~/css/hover.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/buttons.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site_white.css" asp-append-version="true" />
+ 
+    <style>
+        .hidden {
+            display: none !important;
+        }
+
+        .center-wrapper {
+            text-align: center;
+        }
+
+        footer {
+            background-color: white !important;
+            position: fixed !important;
+            height: 40px !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            padding-bottom: 4px !important;
+            z-index: 999999999 !important;
+        }
+
+        /* ====================================================
+            Scrollbar Gray class="flexcroll-gray flex flex-col h-screen"
+            ======================================================*/
+        .flexcroll-gray {
+            scrollbar-face-color: #367CD2;
+            scrollbar-shadow-color: #FFFFFF;
+            scrollbar-highlight-color: #FFFFFF;
+            scrollbar-3dlight-color: #FFFFFF;
+            scrollbar-darkshadow-color: #FFFFFF;
+            scrollbar-track-color: #FFFFFF;
+            scrollbar-arrow-color: #FFFFFF;
+        }
+
+        .flexcroll-gray::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .flexcroll-gray::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+        }
+
+        .flexcroll-gray::-webkit-scrollbar-thumb {
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+            background: rgb(206,220,231);
+            background: -moz-linear-gradient(top, rgba(206,220,231,1) 0%, rgba(89,106,114,1) 65%);
+            background: -webkit-linear-gradient(top, rgba(206,220,231,1) 0%,rgba(89,106,114,1) 65%);
+            background: linear-gradient(to bottom, rgba(206,220,231,1) 0%,rgba(89,106,114,1) 65%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cedce7', endColorstr='#596a72',GradientType=0 );
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+        }
+
+        /* ====================================================
+            Scrollbar White class="flexcroll-white flex flex-col h-screen"
+            ======================================================*/
+        .flexcroll-white {
+            scrollbar-face-color: #FFFFFF;
+            scrollbar-shadow-color: #FFFFFF;
+            scrollbar-highlight-color: #FFFFFF;
+            scrollbar-3dlight-color: #FFFFFF;
+            scrollbar-darkshadow-color: #FFFFFF;
+            scrollbar-track-color: #FFFFFF;
+            scrollbar-arrow-color: #FFFFFF;
+        }
+
+       .flexcroll-white::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .flexcroll-white::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+        }
+
+    .flexcroll-white::-webkit-scrollbar-thumb {
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+        background: rgb(255,255,255);
+        background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(220,220,220,1) 65%);
+        background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(220,220,220,1) 65%);
+        background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(220,220,220,1) 65%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dcdcdc',GradientType=0 );
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+    }
+
+    .cool-gray {
+        background-color: #7c8894;
+        color: white !important;
+    }
+
+    .cool-lightgray {
+        background-color: #ebedf1;
+        color: black !important;
+    }
+
+    .cool-green {
+        background-color: #80b1a0;
+        color: white !important;
+    }
+
+    .zpad {
+        padding-top: 64px !important;
+    }
+
+    .grad_blue {
+        /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#f2f5f6+0,e3eaed+37,c8d7dc+100;Grey+3D+%234 */
+        background: linear-gradient(to bottom, #f2f5f6 0%,#e3eaed 37%,#c8d7dc 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        padding: 0px 0px 2px 0px !important;
+    }
+
+    /* Ensure the cursor is a hand (pointer) when hovering over these clickable areas */
+    .clickable-area {
+        display: block; /* This makes the anchor behave like a block, filling the td */
+        width: 100%;
+        height: 100%;
+        text-decoration: none; /* Remove underline */
+    }
+
+    .clickable-area:hover {
+        cursor: pointer;
+    }
+
+    .ad_free {
+        font-weight: bold !important;
+        font-size: .9em !important;
+        margin: 0px 0px 0px 0px !important;
+        padding: 0px 0px -2px 0px !important;
+    }
+
+    /* Custom alignment for right-aligned ad item */
+    .navbar-nav {
+        display: flex;
+    }
+
+    .ad-item {
+        margin-left: auto;
+    }
+
+    .nav-item, .nav-link, .navbar {
+        font-size: 1em !important;
+    }
+
+    .footer {
+        font-family: 'Segoe UI', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 400;
+    }
+
+        /* Default: transparent for desktop */
+        .navbar-collapse {
+            background-color: transparent;
+        }
+
+        /* Mobile: white background for dropdown menu */
+        @@media (max-width: 991.98px) {
+            .navbar-collapse
+            {
+                background-color: #fff;
+                padding: 1rem;
+                border-radius: 0.25rem;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+            .navbar-nav .nav-link {
+                color: #000 !important;
+                font-weight: 500;
+            }
+        }
+    </style>
+    <style>
+        .dropdown-menu {
+            position: absolute !important;
+            z-index: 999999999999999999999999999999999999999999 !important; /* higher than any image */
+        }
+    </style>
+    <style>
+        .btn_sm {
+            font-size: .9em !important;
+            /* font-weight: bold !important; */
+            padding: 5px 8px 5px 8px !important;
+        }
+
+        .modal-backdrop.show {
+            background-color: black !important;
+        }
+
+        .modal-backdrop {
+            --bs-backdrop-opacity: 1;
+        }
+
+
+    </style>
+
+    <style>
+        /* Center the CLOSED dropdown button */
+        #companyModal .dropdown {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Optional: fix width and appearance of dropdown menu */
+        #companyModal .dropdown-menu, #companyModal .dropdown-menu {
+            min-width: 280px;
+            background-color: white;
+            color: black;
+        }
+        /* Style ONLY the dropdown button */
+        #companyModal #companyDropdownButton, #companyModal #accountDropdownButton {
+            background-color: white;
+            color: black;
+            border-color: #ccc;
+            min-width: 280px; 
+        }
+    </style>
+
+    <style>
+        .gray-scrollbar::-webkit-scrollbar-thumb {
+            background-color: gray !important;
+            border-radius: 4px;
+        }
+
+        .forestgreen-scrollbar::-webkit-scrollbar-thumb {
+            background-color: forestgreen !important;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="flexcroll-white flex flex-col h-screen">
+    <header style="z-index: 9999999999999999999999999999999;">
+        <nav class="navbar fixed-top navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3 shadow mygrad">
+            <div class="container-fluid">
+                <a href="@Url.Action("Index", "Home")" class="navbar-brand" style="margin-top: 0px !important;">
+                    <h3 class="fw-bold" style="margin: 0; font-weight: bold;">
+                        Electron.NET AI Demos
+                    </h3>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav flex-grow-1 align-items-center" style="font-weight: bold !important; line-height: 1em !important;">
+                        <li class="nav-item" style="text-align: center !important; padding-top: 12px !important;">
+                            <a class="nav-link text-dark hvr-grow" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item dropdown position-relative" style="text-align: center !important; padding-top: 12px !important;">
+                            <a style="background-color: transparent !important;"
+                               class="nav-link dropdown-toggle text-dark hvr-grow" href="#" role="button"
+                               data-toggle="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                Screens
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item">
+                                    <a class="dropdown-item hvr-grow" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="dropdown-item hvr-grow" asp-area="" asp-controller="Dialogs" asp-action="Index">Dialogs</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <!-- Right-aligned Ad item -->
+                    @* <li class="nav-item ad-item" style="text-align: center !important;">
+                            <a id="zebra" href="#" class="clickable-area">
+                                <img src="/ads/ad_brain_sos.png" alt="Ad" data-id="" style="width: 420px; height: 60px;">
+                            </a>
+                        </li> *@
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item" style="text-align: right !important; padding: 12px 12px 0px 0px !important;">
+                            <a class="nav-link" href="https://www.youtube.com/watch?v=5CYS0Ti9YC0" target="_blank">
+                                <img src="/img/youtube.png" style="width: 100px;height: auto;" />
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3 zpad">
+            @RenderBody()
+            @* @Html.Partial("_AuthorizeModal")
+            @Html.Partial("_MessageModal")
+            @Html.Partial("_SplashModal") *@
+        </main>
+    </div>
+
+    <!-- Ad placeholder for a 728x90 leaderboard ad -->
+    @* <footer class="border-top footer fixed-bottom text-muted grad_blue" style="min-height: 68px !important;padding: 2px 0px 2px 0px !important;">
+        <table style="width: 100% !important;">
+            <tr>
+                <td style="width: 25%;"></td>
+                <td style="width: 420px !important; height: 60px !important; text-align: center !important;">
+                    <a id="zebra" href="#" class="clickable-area">
+                        <img src="/ads/ad_brain_sos.png" alt="Ad" style="width: 420px; height: 60px;">
+                    </a>
+                </td>
+                <td style="width: 25%;padding-right: 12px !important;text-align: center !important;">
+                    <a href="https://ainetprofit.com" target="_blank" class="clickable-area">
+                        <div class="ad_free">Pro Version is Ad Free</div>
+                        <div class="ad_free">Click Here</div>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </footer> *@
+
+    <footer class="border-top footer fixed-bottom text-muted">
+        <div style="padding: 6px 0px 0px 22px !important;">
+            <p class="not-printable footer_div_p">&copy; 1991 - @DateTime.Now.Year - Ouslan, Inc.</p>
+        </div>
+    </footer>
+
+    <script src="/lib/jquery/dist/jquery.min.js" nonce="@scriptNonce"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js" nonce="@scriptNonce"></script>
+
+    @* DO NOT INCLUDE THESE BECAUSE THEY CAUSE MANY ISSUES!!! *@
+    @* <link rel="stylesheet" href="/lib/datatables/fixedColumns.bootstrap5.min.css" nonce="@scriptNonce" asp-append-version="true" /> *@
+    @* <script src="/lib/datatables/fixedColumns.bootstrap5.min.js" nonce="@scriptNonce" asp-append-version="true"></script> *@
+
+    <!-- Required for Excel and PDF export -->
+    <script src="/lib/datatables/jszip.min.js" nonce="@scriptNonce"></script>
+    <script src="/lib/datatables/pdfmake.min.js" nonce="@scriptNonce"></script>
+    <script src="/lib/datatables/vfs_fonts.js" nonce="@scriptNonce"></script>
+    <script src="/lib/datatables/dataTables.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/dataTables.bootstrap5.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/dataTables.buttons.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/buttons.bootstrap5.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/buttons.colVis.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/buttons.html5.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/buttons.print.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+
+    <script src="/lib/datatables/dataTables.autoFill.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/autoFill.bootstrap5.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/dataTables.colReorder.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/colReorder.bootstrap5.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/dataTables.fixedColumns.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/dataTables.dateTime.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    @* <script src="/lib/datatables/fixedColumns.bootstrap5.min.js"nonce="@scriptNonce" asp-append-version="true"></script> *@
+    <script src="/lib/datatables/dataTables.fixedHeader.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/fixedHeader.bootstrap5.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/dataTables.keyTable.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/keyTable.bootstrap5.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/dataTables.responsive.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/responsive.bootstrap5.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/dataTables.rowGroup.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/rowGroup.bootstrap5.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/dataTables.rowReorder.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/rowReorder.bootstrap5.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/dataTables.scroller.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/scroller.bootstrap5.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/dataTables.searchBuilder.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/searchBuilder.bootstrap5.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/dataTables.searchPanes.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/searchPanes.bootstrap5.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/dataTables.select.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/select.bootstrap5.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/dataTables.stateRestore.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/datatables/stateRestore.bootstrap5.min.js" nonce="@scriptNonce" asp-append-version="true"></script>
+
+    <script src="/lib/fabric.js/fabric.js" nonce="@scriptNonce" asp-append-version="true"></script>
+    <script src="/lib/tagcanvas/tagcanvas.js" nonce="@scriptNonce" asp-append-version="true"></script>
+
+    <script nonce="@scriptNonce">
+
+        let currentAuthorizeModal = null;
+        let currentCompanyModal = null;
+        let currentSplashModal = null;
+
+        // document.addEventListener("DOMContentLoaded", function () {
+        //     //alert("DOMContentLoaded Loads First!");
+
+        //     const zebraElement = document.getElementById("zebra");
+        //     if (zebraElement) {
+        //         zebraElement.addEventListener("click", function (event) {
+        //             event.preventDefault();
+        //             if (window.electron && window.electron.ipcRenderer) {
+        //                 window.electron.ipcRenderer.send('invoke-menu-item', 'zebra');
+        //             } else {
+        //                 window.open("https://maxlifespan.com/")
+        //             }
+        //         });
+        //     }
+        // });
+
+        $(document).ready(function () {
+            //alert("$(document).ready Loads Last!");
+
+        });
+
+        // function showAuthorizeModal() {
+        //     //currentCompanyModal
+        //     const modalHtml = document.getElementById("authorizeModalWrapper").innerHTML;
+        //     const container = document.createElement("div");
+        //     container.innerHTML = modalHtml;
+        //     document.body.appendChild(container);
+
+        //     const modalElement = container.querySelector("#authorizeModal");
+        //     currentAuthorizeModal = new bootstrap.Modal(modalElement, {
+        //         backdrop: 'static',
+        //         keyboard: false
+        //     });
+
+        //     currentAuthorizeModal.show();
+        // }
+
+        // function authorize() {
+        //     const email = document.getElementById("emailInput").value.trim();
+        //     if (email) {
+        //         alert("Authorizing with: " + email);
+        //     } else {
+        //         alert("Please enter your email.");
+        //     }
+        // }
+
+        // function showCompanyModal() {
+        //     const modalHtml = document.getElementById("companyModalWrapper").innerHTML;
+        //     const container = document.createElement("div");
+        //     container.innerHTML = modalHtml;
+        //     document.body.appendChild(container);
+
+        //     const modalElement = container.querySelector("#companyModal");
+        //     currentCompanyModal = new bootstrap.Modal(modalElement, {
+        //         backdrop: 'static',
+        //         keyboard: false
+        //     });
+
+        //     currentCompanyModal.show();
+
+        //     const currentDb = getCurrentDatabase(); // ✅ Get current selected database
+
+        //     $.ajax({
+        //         url: '/Company/GetCompanies',
+        //         type: 'GET',
+        //         success: function (data) {
+        //             const dropdownMenu = container.querySelector('#companyDropdownMenu');
+        //             const dropdownButton = container.querySelector('#companyDropdownButton');
+
+        //             if (!dropdownMenu || !dropdownButton) return;
+
+        //             dropdownMenu.innerHTML = ''; // Clear loading
+
+        //             if (!Array.isArray(data) || data.length === 0) {
+        //                 dropdownMenu.innerHTML = '<li><span class="dropdown-item-text text-muted">No companies found</span></li>';
+        //                 return;
+        //             }
+
+        //             let selectedMatched = false;
+
+        //             data.forEach(company => {
+        //                 const dbName = company.databaseName || company.DatabaseName;
+
+        //                 const a = document.createElement('a');
+        //                 a.className = 'dropdown-item';
+        //                 a.href = '#';
+        //                 a.textContent = dbName;
+        //                 a.addEventListener('click', function () {
+        //                     dropdownButton.textContent = dbName;
+        //                     onCompanySelected(dbName);
+        //                 });
+
+        //                 const li = document.createElement('li');
+        //                 li.appendChild(a);
+        //                 dropdownMenu.appendChild(li);
+
+        //                 if (dbName === currentDb && !selectedMatched) {
+        //                     dropdownButton.textContent = dbName;
+        //                     onCompanySelected(dbName);
+        //                     selectedMatched = true;
+        //                 }
+        //             });
+
+        //             if (!selectedMatched) {
+        //                 const firstDb = data[0].databaseName || data[0].DatabaseName;
+        //                 dropdownButton.textContent = firstDb;
+        //                 onCompanySelected(firstDb);
+        //             }
+        //         },
+        //         error: function () {
+        //             const dropdownMenu = container.querySelector('#companyDropdownMenu');
+        //             if (dropdownMenu) {
+        //                 dropdownMenu.innerHTML = '<li><span class="dropdown-item-text text-danger">Failed to load</span></li>';
+        //             }
+        //         }
+        //     });
+        // }
+
+        // function onCompanySelected(dbName) {
+        //     // Persist the selected database to the server if needed
+        //     $.ajax({
+        //         url: '/GlobalState/SetDatabase',
+        //         method: 'POST',
+        //         data: { databaseName: dbName },
+        //         async: false,
+        //         success: function () {
+        //             console.log("Database name set to:", dbName);
+        //         },
+        //         error: function () {
+        //             console.error("Failed to set selected database.");
+        //         }
+        //     });
+        // }
+
+        // function company() {
+        //     const email = document.getElementById("emailInput").value.trim();
+        //     if (email) {
+        //         alert("Authorizing with: " + email);
+        //     } else {
+        //         alert("Please enter your email.");
+        //     }
+        // }
+
+        // function showSplashModal() {
+        //     const modalHtml = document.getElementById("splashModalWrapper").innerHTML;
+        //     const container = document.createElement("div");
+        //     container.innerHTML = modalHtml;
+        //     document.body.appendChild(container);
+
+        //     const modalElement = container.querySelector("#splashModal");
+        //     currentSplashModal = new bootstrap.Modal(modalElement, {
+        //         backdrop: 'static',
+        //         keyboard: false
+        //     });
+
+        //     currentSplashModal.show();
+
+        //     // FIXED: Manually trigger hookModalEvents after modal is shown
+        //     setTimeout(() => hookModalEvents(modalElement), 300); // Slight delay ensures DOM is ready
+        // }
+
+        // function splash() {
+        //     const email = document.getElementById("emailInput").value.trim();
+        //     if (email) {
+        //         alert("Authorizing with: " + email);
+        //     } else {
+        //         alert("Please enter your email.");
+        //     }
+        // }
+
+        // function runApp() {
+        //     if (currentAuthorizeModal) {
+        //         currentAuthorizeModal.hide();
+        //         currentAuthorizeModal = null;
+        //     }
+        //     if (currentCompanyModal) {
+        //         currentCompanyModal.hide();
+        //         currentCompanyModal = null;
+        //     }
+        //     if (currentSplashModal) {
+        //         currentSplashModal.hide();
+        //         currentSplashModal = null;
+        //     }
+
+        //     // DO NOT redirect or reload here — just close the popup
+        //     // Then do your redirect or run logic
+        //     //window.location.href = "/Home/Index"; // or your route
+        // }
+
+        // function showTextConfirmModal(title, message, onYes, onNo) {
+        //     document.getElementById("modalTitle").textContent = title;
+        //     document.getElementById("modalBody").textContent = message;
+
+        //     const modal = new bootstrap.Modal(document.getElementById('textConfirmModal'));
+        //     modal.show();
+
+        //     // Assign new event handlers
+        //     document.getElementById("btnYes").onclick = function () {
+        //         modal.hide();
+        //         if (onYes) onYes();
+        //     };
+
+        //     document.getElementById("btnNo").onclick = function () {
+        //         modal.hide();
+        //         if (onNo) onNo();
+        //     };
+        // }
+
+        // function setSelectedDatabase(dbName) {
+        //     $.ajax({
+        //         url: '/GlobalState/SetDatabase',
+        //         method: 'POST',
+        //         data: { databaseName: dbName },
+        //         async: false,
+        //         success: function () {
+        //             console.log("Database name set to:", dbName);
+        //         },
+        //         error: function () {
+        //             console.error("Failed to set database name.");
+        //         }
+        //     });
+        // }
+
+        // function getCurrentDatabase() {
+        //     var dbName = "";
+        //     $.ajax({
+        //         url: '/GlobalState/GetDatabase',
+        //         method: 'GET',
+        //         async: false,
+        //         success: function (data) {
+        //             dbName = data;
+        //         },
+        //         error: function () {
+        //             console.error("Failed to get database name.");
+        //         }
+        //     });
+        //     return dbName;
+        // }
+
+        // function getCurrentAccount() {
+        //     var accountName = "";
+        //     $.ajax({
+        //         url: '/GlobalState/GetAccount',
+        //         method: 'GET',
+        //         async: false,
+        //         success: function (data) {
+        //             accountName = data;
+        //         },
+        //         error: function () {
+        //             console.error("Failed to get database name.");
+        //         }
+        //     });
+        //     return accountName;
+        // }
+
+        function applyThemeToDropdowns(buttonIds, menuIds) {
+            const appTheme = "dark"; // or "dark"
+            //const lightBtnClass = "btn btn-sm btn-outline-success dropdown-toggle fw-bold";
+            const lightBtnClass = "btn btn-sm btn-outline-secondary dropdown-toggle fw-bold";
+            const darkBtnClass = "btn btn-sm btn-outline-dark dropdown-toggle fw-bold";
+
+            const lightMenuClass = "forestgreen-scrollbar";
+            const darkMenuClass = "gray-scrollbar";
+
+            buttonIds.forEach(id => {
+                const className = appTheme === "light" ? lightBtnClass : darkBtnClass;
+                $("#" + id).attr("class", className);
+            });
+
+            menuIds.forEach(id => {
+                const menu = $("#" + id);
+                menu.removeClass(lightMenuClass + " " + darkMenuClass);
+                menu.addClass(appTheme === "light" ? lightMenuClass : darkMenuClass);
+            });
+        }
+
+        // Helper function
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        // document.addEventListener("DOMContentLoaded", () => {
+        //     document.getElementById("btn").addEventListener("click", async () => {
+        //         const filePath = await window.electronAPI.openTextFileDialog();
+        //         console.log(filePath);
+        //     });
+        // });
+
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

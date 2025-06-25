@@ -1,0 +1,84 @@
+/* kcab */
+@font-face {
+    font-family: 'kcab';
+    src: url('../fonts/kcab.ttf') format('truetype');
+}
+
+/* FrontPageNeue */
+@font-face {
+    font-family: 'FrontPageNeue';
+    src: url('/fonts/front-page-neue/frontpageneue.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Roboto Condensed */
+@font-face {
+    font-family: 'RobotoCondensed-Bold';
+    src: url('/fonts/roboto-condensed/robotocondensed-bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RobotoCondensed-BoldItalic';
+    src: url('/fonts/roboto-condensed/robotocondensed-bolditalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'RobotoCondensed-Italic';
+    src: url('/fonts/roboto-condensed/robotocondensed-italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'RobotoCondensed-Light';
+    src: url('/fonts/roboto-condensed/robotocondensed-light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RobotoCondensed-LightItalic';
+    src: url('/fonts/roboto-condensed/robotocondensed-lightitalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'RobotoCondensed-Regular';
+    src: url('/fonts/roboto-condensed/robotocondensed-regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* Roboto */
+@font-face {
+    font-family: 'Roboto';
+    src: url('/fonts/roboto.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'playwritein-extralight';
+    src: url('../fonts/playwrite_in/playwritein-extralight.ttf') format('truetype'), url('../fonts/playwrite_in/playwritein-light.ttf') format('truetype'), url('../fonts/playwrite_in/playwritein-regular.ttf') format('truetype'), url('../fonts/playwrite_in/playwritein-thin.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'playwritein-light';
+    src: url('../fonts/playwrite_in/playwritein-light.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'playwritein-regular';
+    src: url('../fonts/playwrite_in/playwritein-regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'playwritein-thin';
+    src: url('../fonts/playwrite_in/playwritein-thin.ttf') format('truetype');
+}
+
+
