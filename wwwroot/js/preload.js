@@ -1,4 +1,4 @@
-﻿const { contextBridge, ipcRenderer } = require('electron');
+﻿const { contextBridge, ipcRenderer, shell } = require('electron');
 
 console.log("preload.js loaded");
 
@@ -10,6 +10,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     // Explicit wrapper for openDialog
     openDialog: (channel, config) => ipcRenderer.invoke(channel, config),
+
+    sendExternalUrl: (url) => ipcRenderer.send("open-external-url", url),
 
     // Image selection dialog handler
     selectImage: () => {

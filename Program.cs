@@ -1,34 +1,4 @@
-﻿//var builder = WebApplication.CreateBuilder(args);
-
-//// Add services to the container.
-//builder.Services.AddControllersWithViews();
-
-//var app = builder.Build();
-
-//// Configure the HTTP request pipeline.
-//if (!app.Environment.IsDevelopment())
-//{
-//    app.UseExceptionHandler("/Home/Error");
-//    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-//    app.UseHsts();
-//}
-
-//app.UseHttpsRedirection();
-//app.UseRouting();
-
-//app.UseAuthorization();
-
-//app.MapStaticAssets();
-
-//app.MapControllerRoute(
-//    name: "default",
-//    pattern: "{controller=Home}/{action=Index}/{id?}")
-//    .WithStaticAssets();
-
-//using DocumentFormat.OpenXml.Spreadsheet;
-//using DocumentFormat.OpenXml.Vml;
-//using DocumentFormat.OpenXml.Wordprocessing;
-using ElectronNET.API;
+﻿using ElectronNET.API;
 using ElectronNET.API.Entities;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -216,7 +186,9 @@ namespace AiNetProfit
                     {
                         Electron.App.Ready += async () =>
                         {
-                            var preloadPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "js", "preload.js");
+                            PathManager path = new PathManager();
+                            string dbFolder = path.GetAnyFolder("");
+                            var preloadPath = System.IO.Path.Combine(dbFolder, "wwwroot", "js", "preload.js");
 
                             var browserWindow = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions
                             {
@@ -232,9 +204,9 @@ namespace AiNetProfit
                                 Icon = "wwwroot/img/check.ico",
                                 WebPreferences = new WebPreferences
                                 {
-                                    NodeIntegration = false,
+                                    Preload = preloadPath,
                                     ContextIsolation = true,
-                                    Preload = preloadPath
+                                    NodeIntegration = false
                                 }
                             });
 
@@ -263,7 +235,7 @@ namespace AiNetProfit
                                 });
 
                                 var filePath = result?.FirstOrDefault();
-                                Electron.IpcMain.Send(browserWindow, "open-image-dialog-response", filePath);
+                                Electron.IpcMain.Send(mainWindow, "open-image-dialog-response", filePath);
                             });
 
                         };

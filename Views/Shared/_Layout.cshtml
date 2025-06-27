@@ -370,14 +370,9 @@
                         </li>
                     </ul>
                     <!-- Right-aligned Ad item -->
-                    @* <li class="nav-item ad-item" style="text-align: center !important;">
-                            <a id="zebra" href="#" class="clickable-area">
-                                <img src="/ads/ad_brain_sos.png" alt="Ad" data-id="" style="width: 420px; height: 60px;">
-                            </a>
-                        </li> *@
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item" style="text-align: right !important; padding: 12px 12px 0px 0px !important;">
-                            <a class="nav-link" href="https://www.youtube.com/watch?v=5CYS0Ti9YC0" target="_blank">
+                            <a class="nav-link external-link" href="https://www.youtube.com/watch?v=5CYS0Ti9YC0" target="_blank">
                                 <img src="/img/youtube.png" style="width: 100px;height: auto;" />
                             </a>
                         </li>
@@ -395,26 +390,6 @@
             @Html.Partial("_SplashModal") *@
         </main>
     </div>
-
-    <!-- Ad placeholder for a 728x90 leaderboard ad -->
-    @* <footer class="border-top footer fixed-bottom text-muted grad_blue" style="min-height: 68px !important;padding: 2px 0px 2px 0px !important;">
-        <table style="width: 100% !important;">
-            <tr>
-                <td style="width: 25%;"></td>
-                <td style="width: 420px !important; height: 60px !important; text-align: center !important;">
-                    <a id="zebra" href="#" class="clickable-area">
-                        <img src="/ads/ad_brain_sos.png" alt="Ad" style="width: 420px; height: 60px;">
-                    </a>
-                </td>
-                <td style="width: 25%;padding-right: 12px !important;text-align: center !important;">
-                    <a href="https://ainetprofit.com" target="_blank" class="clickable-area">
-                        <div class="ad_free">Pro Version is Ad Free</div>
-                        <div class="ad_free">Click Here</div>
-                    </a>
-                </td>
-            </tr>
-        </table>
-    </footer> *@
 
     <footer class="border-top footer fixed-bottom text-muted">
         <div style="padding: 6px 0px 0px 22px !important;">
@@ -478,260 +453,10 @@
         let currentCompanyModal = null;
         let currentSplashModal = null;
 
-        // document.addEventListener("DOMContentLoaded", function () {
-        //     //alert("DOMContentLoaded Loads First!");
-
-        //     const zebraElement = document.getElementById("zebra");
-        //     if (zebraElement) {
-        //         zebraElement.addEventListener("click", function (event) {
-        //             event.preventDefault();
-        //             if (window.electron && window.electron.ipcRenderer) {
-        //                 window.electron.ipcRenderer.send('invoke-menu-item', 'zebra');
-        //             } else {
-        //                 window.open("https://maxlifespan.com/")
-        //             }
-        //         });
-        //     }
-        // });
-
         $(document).ready(function () {
             //alert("$(document).ready Loads Last!");
 
         });
-
-        // function showAuthorizeModal() {
-        //     //currentCompanyModal
-        //     const modalHtml = document.getElementById("authorizeModalWrapper").innerHTML;
-        //     const container = document.createElement("div");
-        //     container.innerHTML = modalHtml;
-        //     document.body.appendChild(container);
-
-        //     const modalElement = container.querySelector("#authorizeModal");
-        //     currentAuthorizeModal = new bootstrap.Modal(modalElement, {
-        //         backdrop: 'static',
-        //         keyboard: false
-        //     });
-
-        //     currentAuthorizeModal.show();
-        // }
-
-        // function authorize() {
-        //     const email = document.getElementById("emailInput").value.trim();
-        //     if (email) {
-        //         alert("Authorizing with: " + email);
-        //     } else {
-        //         alert("Please enter your email.");
-        //     }
-        // }
-
-        // function showCompanyModal() {
-        //     const modalHtml = document.getElementById("companyModalWrapper").innerHTML;
-        //     const container = document.createElement("div");
-        //     container.innerHTML = modalHtml;
-        //     document.body.appendChild(container);
-
-        //     const modalElement = container.querySelector("#companyModal");
-        //     currentCompanyModal = new bootstrap.Modal(modalElement, {
-        //         backdrop: 'static',
-        //         keyboard: false
-        //     });
-
-        //     currentCompanyModal.show();
-
-        //     const currentDb = getCurrentDatabase(); // ✅ Get current selected database
-
-        //     $.ajax({
-        //         url: '/Company/GetCompanies',
-        //         type: 'GET',
-        //         success: function (data) {
-        //             const dropdownMenu = container.querySelector('#companyDropdownMenu');
-        //             const dropdownButton = container.querySelector('#companyDropdownButton');
-
-        //             if (!dropdownMenu || !dropdownButton) return;
-
-        //             dropdownMenu.innerHTML = ''; // Clear loading
-
-        //             if (!Array.isArray(data) || data.length === 0) {
-        //                 dropdownMenu.innerHTML = '<li><span class="dropdown-item-text text-muted">No companies found</span></li>';
-        //                 return;
-        //             }
-
-        //             let selectedMatched = false;
-
-        //             data.forEach(company => {
-        //                 const dbName = company.databaseName || company.DatabaseName;
-
-        //                 const a = document.createElement('a');
-        //                 a.className = 'dropdown-item';
-        //                 a.href = '#';
-        //                 a.textContent = dbName;
-        //                 a.addEventListener('click', function () {
-        //                     dropdownButton.textContent = dbName;
-        //                     onCompanySelected(dbName);
-        //                 });
-
-        //                 const li = document.createElement('li');
-        //                 li.appendChild(a);
-        //                 dropdownMenu.appendChild(li);
-
-        //                 if (dbName === currentDb && !selectedMatched) {
-        //                     dropdownButton.textContent = dbName;
-        //                     onCompanySelected(dbName);
-        //                     selectedMatched = true;
-        //                 }
-        //             });
-
-        //             if (!selectedMatched) {
-        //                 const firstDb = data[0].databaseName || data[0].DatabaseName;
-        //                 dropdownButton.textContent = firstDb;
-        //                 onCompanySelected(firstDb);
-        //             }
-        //         },
-        //         error: function () {
-        //             const dropdownMenu = container.querySelector('#companyDropdownMenu');
-        //             if (dropdownMenu) {
-        //                 dropdownMenu.innerHTML = '<li><span class="dropdown-item-text text-danger">Failed to load</span></li>';
-        //             }
-        //         }
-        //     });
-        // }
-
-        // function onCompanySelected(dbName) {
-        //     // Persist the selected database to the server if needed
-        //     $.ajax({
-        //         url: '/GlobalState/SetDatabase',
-        //         method: 'POST',
-        //         data: { databaseName: dbName },
-        //         async: false,
-        //         success: function () {
-        //             console.log("Database name set to:", dbName);
-        //         },
-        //         error: function () {
-        //             console.error("Failed to set selected database.");
-        //         }
-        //     });
-        // }
-
-        // function company() {
-        //     const email = document.getElementById("emailInput").value.trim();
-        //     if (email) {
-        //         alert("Authorizing with: " + email);
-        //     } else {
-        //         alert("Please enter your email.");
-        //     }
-        // }
-
-        // function showSplashModal() {
-        //     const modalHtml = document.getElementById("splashModalWrapper").innerHTML;
-        //     const container = document.createElement("div");
-        //     container.innerHTML = modalHtml;
-        //     document.body.appendChild(container);
-
-        //     const modalElement = container.querySelector("#splashModal");
-        //     currentSplashModal = new bootstrap.Modal(modalElement, {
-        //         backdrop: 'static',
-        //         keyboard: false
-        //     });
-
-        //     currentSplashModal.show();
-
-        //     // FIXED: Manually trigger hookModalEvents after modal is shown
-        //     setTimeout(() => hookModalEvents(modalElement), 300); // Slight delay ensures DOM is ready
-        // }
-
-        // function splash() {
-        //     const email = document.getElementById("emailInput").value.trim();
-        //     if (email) {
-        //         alert("Authorizing with: " + email);
-        //     } else {
-        //         alert("Please enter your email.");
-        //     }
-        // }
-
-        // function runApp() {
-        //     if (currentAuthorizeModal) {
-        //         currentAuthorizeModal.hide();
-        //         currentAuthorizeModal = null;
-        //     }
-        //     if (currentCompanyModal) {
-        //         currentCompanyModal.hide();
-        //         currentCompanyModal = null;
-        //     }
-        //     if (currentSplashModal) {
-        //         currentSplashModal.hide();
-        //         currentSplashModal = null;
-        //     }
-
-        //     // DO NOT redirect or reload here — just close the popup
-        //     // Then do your redirect or run logic
-        //     //window.location.href = "/Home/Index"; // or your route
-        // }
-
-        // function showTextConfirmModal(title, message, onYes, onNo) {
-        //     document.getElementById("modalTitle").textContent = title;
-        //     document.getElementById("modalBody").textContent = message;
-
-        //     const modal = new bootstrap.Modal(document.getElementById('textConfirmModal'));
-        //     modal.show();
-
-        //     // Assign new event handlers
-        //     document.getElementById("btnYes").onclick = function () {
-        //         modal.hide();
-        //         if (onYes) onYes();
-        //     };
-
-        //     document.getElementById("btnNo").onclick = function () {
-        //         modal.hide();
-        //         if (onNo) onNo();
-        //     };
-        // }
-
-        // function setSelectedDatabase(dbName) {
-        //     $.ajax({
-        //         url: '/GlobalState/SetDatabase',
-        //         method: 'POST',
-        //         data: { databaseName: dbName },
-        //         async: false,
-        //         success: function () {
-        //             console.log("Database name set to:", dbName);
-        //         },
-        //         error: function () {
-        //             console.error("Failed to set database name.");
-        //         }
-        //     });
-        // }
-
-        // function getCurrentDatabase() {
-        //     var dbName = "";
-        //     $.ajax({
-        //         url: '/GlobalState/GetDatabase',
-        //         method: 'GET',
-        //         async: false,
-        //         success: function (data) {
-        //             dbName = data;
-        //         },
-        //         error: function () {
-        //             console.error("Failed to get database name.");
-        //         }
-        //     });
-        //     return dbName;
-        // }
-
-        // function getCurrentAccount() {
-        //     var accountName = "";
-        //     $.ajax({
-        //         url: '/GlobalState/GetAccount',
-        //         method: 'GET',
-        //         async: false,
-        //         success: function (data) {
-        //             accountName = data;
-        //         },
-        //         error: function () {
-        //             console.error("Failed to get database name.");
-        //         }
-        //     });
-        //     return accountName;
-        // }
 
         function applyThemeToDropdowns(buttonIds, menuIds) {
             const appTheme = "dark"; // or "dark"
@@ -764,12 +489,95 @@
             }
         }
 
-        // document.addEventListener("DOMContentLoaded", () => {
-        //     document.getElementById("btn").addEventListener("click", async () => {
-        //         const filePath = await window.electronAPI.openTextFileDialog();
-        //         console.log(filePath);
-        //     });
-        // });
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll("a.external-link").forEach(link => {
+                link.addEventListener("click", function (e) {
+                    e.preventDefault();
+
+                    const url = link.getAttribute("href");
+                    if (!url) return;
+
+                    fetch("/External/Open", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ url: url })
+                    }).then(() => {
+                        console.log("✅ URL sent to server: " + url);
+                    }).catch(err => {
+                        console.error("❌ Failed to send URL:", err);
+                    });
+                });
+            });
+        });
+
+        document.getElementById('select-image').addEventListener('click', async () => {
+            const response = await fetch('/Image/SelectImage');
+            const result = await response.json();
+            if (result.success) {
+                document.getElementById('selected-image-path').value = result.path;
+            } else {
+                alert('No image selected.');
+            }
+        });
+
+        (function () {
+
+            const ipc = window.electronAPI;
+            if (!ipc || !ipc.send || !ipc.receive) {
+                return;
+            }
+
+            document.getElementById("select-directory")?.addEventListener("click", () => {
+                ipc.send("select-directory");
+            });
+
+            ipc.receive("select-directory-reply", (path) => {
+                document.getElementById("selected-file").innerText = `You selected: ${path}`;
+            });
+
+            document.getElementById("error-dialog")?.addEventListener("click", () => {
+                ipc.send("error-dialog");
+            });
+
+            document.getElementById("information-dialog")?.addEventListener("click", () => {
+                ipc.send("information-dialog");
+            });
+
+            ipc.receive("information-dialog-reply", (index) => {
+                let message = 'You selected ';
+                message += index == 0 ? 'yes.' : 'no.';
+                document.getElementById("info-selection").innerText = message;
+            });
+
+            document.getElementById("save-dialog")?.addEventListener("click", () => {
+                ipc.send("save-dialog");
+            });
+
+            ipc.receive("save-dialog-reply", (path) => {
+                document.getElementById("file-saved").innerHTML = `Path selected: ${path || 'No path'}`;
+            });
+
+            const openImageBtn = document.getElementById("open-image");
+            openImageBtn?.addEventListener("click", () => {
+                ipc.send("open-image-dialog");
+            });
+
+            ipc.receive("open-image-dialog-response", (filePath) => {
+                const selectedPathEl = document.getElementById("selected-image-path");
+                if (!selectedPathEl) return;
+
+                if (filePath) {
+
+                    $("#selected-image-path").val(filePath);
+
+                } else {
+                    selectedPathEl.value = "No file selected.";
+                }
+            });
+
+        })();
 
     </script>
 

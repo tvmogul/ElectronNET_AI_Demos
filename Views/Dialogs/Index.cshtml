@@ -14,28 +14,52 @@
             </h2><br />
 
             <div style="font-size: 1.2em !important;">
-                Using Node.js in a C# .NET 9 Core Razor MVC web app with Electron.NET 
-                is like putting a <strong>square peg in a round hole—unnecessary,
-                bloated</strong>, and
-                fundamentally at odds with the streamlined, high-performance architecture 
-                of modern .NET. Electron.NET was built to give .NET developers native access 
-                to desktop-level power without dragging in Node.js and its fragile web of 
-                dependencies, security holes, and endless package churn. By avoiding Node, 
-                you keep your app faster, leaner, and entirely in the C# ecosystem you 
-                control—no npm hacks, no version hell, no nonsense. Just clean, efficient 
+                Using Node.js in a C# .NET 9 Core Razor MVC web app with Electron.NET
+                is like putting a <strong>
+                    square peg in a round hole—unnecessary,
+                    bloated
+                </strong>, and
+                fundamentally at odds with the streamlined, high-performance architecture
+                of modern .NET. Electron.NET was built to give .NET developers native access
+                to desktop-level power without dragging in Node.js and its fragile web of
+                dependencies, security holes, and endless package churn. By avoiding Node,
+                you keep your app faster, leaner, and entirely in the C# ecosystem you
+                control—no npm hacks, no version hell, no nonsense. Just clean, efficient
                 .NET code from top to bottom.<br />
 
-                The <code>Electron.Dialog</code> in Electron.NET allows you to use 
-                native system dialogs WITHOUT Node.js for opening files or directories, 
+                The <code>Electron.Dialog</code> in Electron.NET allows you to use
+                native system dialogs WITHOUT Node.js for opening files or directories,
                 saving a file or displaying informational messages.<br />
 
-                This is a main process module because this process is more efficient 
-                with native utilities and it allows the call to happen without interupting 
+                This is a main process module because this process is more efficient
+                with native utilities and it allows the call to happen without interupting
                 the visible elements in your page's renderer process.<br />
             </div>
 
         </div>
     </header>
+
+    <div class="demo">
+        <div class="demo-wrapper">
+            <button id="open-file-demo-toggle" class="text-start border rounded-3 p-3 mb-3 shadow-sm bg-light js-container-target demo-toggle-button" style="cursor: pointer; max-width: 600px;">
+                <div class="text-dark fw-bold">Select An Image</div>
+                <div class="text-muted small mt-1">
+                    Supports: Win, macOS, Linux
+                    <span class="mx-1">|</span>
+                    Process: Main
+                </div>
+            </button>
+            <div class="demo-box">
+                <div class="demo-controls">
+                    <button id="select-image" class="btn btn-sm btn-primary fw-bold">
+                        Select Image
+                    </button>
+                    <input id="selected-image-path" type="text" readonly>
+                </div>
+                <p>In this demo, we use C# in the Controller.</p>
+            </div>
+        </div>
+    </div>
 
     <div class="demo">
         <div class="demo-wrapper">
@@ -119,47 +143,4 @@
             </div>
         </div>
     </div>
-
-
-    <script>
-        (function () {
-            const ipc = window.electronAPI;
-
-            if (!ipc) {
-                console.error("ipcRenderer not available");
-                return;
-            }
-
-            document.getElementById("select-directory")?.addEventListener("click", () => {
-                ipc.send("select-directory");
-            });
-
-            ipc.receive("select-directory-reply", (path) => {
-                document.getElementById("selected-file").innerText = `You selected: ${path}`;
-            });
-
-            document.getElementById("error-dialog")?.addEventListener("click", () => {
-                ipc.send("error-dialog");
-            });
-
-            document.getElementById("information-dialog")?.addEventListener("click", () => {
-                ipc.send("information-dialog");
-            });
-
-            ipc.receive("information-dialog-reply", (index) => {
-                let message = 'You selected ';
-                message += index == 0 ? 'yes.' : 'no.';
-                document.getElementById("info-selection").innerText = message;
-            });
-
-            document.getElementById("save-dialog")?.addEventListener("click", () => {
-                ipc.send("save-dialog");
-            });
-
-            ipc.receive("save-dialog-reply", (path) => {
-                document.getElementById("file-saved").innerHTML = `Path selected: ${path || 'No path'}`;
-            });
-
-        })();
-    </script>
 </section>
